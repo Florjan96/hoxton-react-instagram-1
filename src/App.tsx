@@ -18,6 +18,21 @@ function App() {
     getImagesFromServer();
   }, []);
 
+  function increaseLike() {
+    setImages(images.likes)
+    fetch("http://localhost:3000/images", {
+      method:"PATCH",
+      headers : {
+        " Content - Type " : " application / json "
+  }
+  body:JSON.stringify({images:images.likes++})
+    });
+    
+  }
+
+  let comments = images.filter((comment) => comment.comments);
+  console.log(comments);
+
   return (
     <div className="App">
       {/* <!-- logo --> */}
@@ -31,10 +46,23 @@ function App() {
             <img src={image.image} className="image" />
             <div className="likes-section">
               <span className="likes">{image.likes}</span>
-              <button className="like-button">♥</button>
+              <button
+                className="like-button"
+                onClick={() => {
+                  let copyOfImages = structuredClone(images);
+                  let match = copyOfImages.find(
+                    (target: any) => target.id === image.id
+                  );
+
+                  match.likes++;
+
+                  setImages(copyOfImages);
+                }}
+              >
+                ♥
+              </button>
             </div>
             <ul className="comments">
-              <li>Get rid of these comments</li>
               <li>Get rid of these comments</li>
               <li>And replace them with the real ones</li>
               <li>From the server</li>
